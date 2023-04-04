@@ -8,12 +8,13 @@ import Footer from "../components/Footer";
 import Github from "../components/GitHub";
 import Header from "../components/Header";
 import LoadingDots from "../components/LoadingDots";
+import ReactMarkdown from 'react-markdown';
 
 const Home: NextPage = () => {
   const [loading, setLoading] = useState(false);
   const [bio, setBio] = useState("");
   const [vibe, setVibe] = useState<VibeType>("Calculator");
-  const [generatedBios, setGeneratedBios] = useState<String>("");
+  const [generatedBios, setGeneratedBios] = useState<string>("");
 
   const bioRef = useRef<null | HTMLDivElement>(null);
 
@@ -23,9 +24,9 @@ const Home: NextPage = () => {
     }
   };
 
-  
+
   const generateBio = async (e: any) => {
-    console.log(bio);
+
     e.preventDefault();
     setGeneratedBios("");
     setLoading(true);
@@ -36,6 +37,7 @@ const Home: NextPage = () => {
       },
       body: JSON.stringify({
         text: bio,
+        plugin: vibe,
       }),
     });
 
@@ -44,7 +46,7 @@ const Home: NextPage = () => {
     }
 
     const data = await response.json();
-    console.log(data)
+
     if (!data) {
       return;
     }
@@ -63,10 +65,20 @@ const Home: NextPage = () => {
 
       <Header />
       <main className="flex flex-1 w-full flex-col items-center justify-center text-center px-4 mt-12 sm:mt-20">
-        
+
+      <a
+          className="flex max-w-fit items-center justify-center space-x-2 rounded-full border border-gray-300 bg-white px-4 py-2 text-sm text-gray-600 shadow-md transition-colors hover:bg-gray-100 mb-5"
+          href="https://github.com/Pluginbase/pluginbase-api-example-nextjs-oss"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Github />
+          <p>Get the App Code</p>
+        </a>
+
         <div className="max-w-xl w-full">
 
-        <div className="flex mb-5 items-center space-x-3">
+          <div className="flex mb-5 items-center space-x-3">
             <Image src="/1-black.png" width={30} height={30} alt="1 icon" />
             <p className="text-left font-medium">Select Plugin</p>
           </div>
@@ -100,7 +112,7 @@ const Home: NextPage = () => {
               "e.g. What's the sqaure root of 607'"
             }
           />
-        
+
           {!loading && (
             <button
               className="bg-black rounded-xl text-white font-medium px-4 py-2 sm:mt-10 mt-8 hover:bg-black/80 w-full"
@@ -136,13 +148,14 @@ const Home: NextPage = () => {
                 </h2>
               </div>
               <div className="space-y-8 flex flex-col items-center text-left justify-start max-w-xl mx-auto">
-                      <div
-                        className="bg-white rounded-xl shadow-md p-4 hover:bg-gray-100 transition cursor-copy border"
-                      >
-                        <p>{generatedBios}</p>
-                      </div>
-                  
-                  
+                <div
+                  className="bg-white rounded-xl shadow-md p-4 hover:bg-gray-100 transition cursor-copy border"
+                >
+
+                  <ReactMarkdown>{generatedBios}</ReactMarkdown>
+                </div>
+
+
               </div>
             </>
           )}
